@@ -25,13 +25,13 @@ Tài liệu tổng hợp và hệ thống hóa kiến thức xử lý dữ liệ
   - [4.3. Chuẩn hóa Thang đo (Data Normalization)](#43-chuẩn-hóa-thang-đo-data-normalization)
   - [4.4. Gom nhóm dữ liệu số (Data Binning)](#44-gom-nhóm-dữ-liệu-số-data-binning)
   - [4.5. Mã hóa biến phân loại (Categorical to Numeric)](#45-mã-hóa-biến-phân-loại-categorical-to-numeric)
-- [5. Exploratory Data Analysis (EDA)](#5-Exploratory-Data-Analysis-eda)
-  - [5.1. Descriptive Statistics (Thống kê mô tả)]
-  - [5.2. Group By & Heatmap]
-  - [5.3. ANOVA (Analysis of Variance)]
-  - [5.4. Correlation Statistics — Pearson Correlation]
-  - [5.5. Chi-Square Test (χ²)]
-  - [5.6. Tổng kết: Chọn phương pháp theo loại biến]
+- [5. Exploratory Data Analysis (EDA)](#5-exploratory-data-analysis-eda)
+  - [5.1. Descriptive Statistics (Thống kê mô tả)](#51-descriptive-statistics-thống-kê-mô-tả)
+  - [5.2. Group By & Heatmap](#52-group-by--heatmap)
+  - [5.3. ANOVA (Analysis of Variance)](#53-anova-analysis-of-variance)
+  - [5.4. Correlation Statistics — Pearson Correlation](#54-correlation-statistics--pearson-correlation)
+  - [5.5. Chi-Square Test (χ²)](#55-chi-square-test-χ²)
+  - [5.6. Tổng kết: Chọn phương pháp theo loại biến](#56-tổng-kết-chọn-phương-pháp-theo-loại-biến)
 
 > 📝 **Ghi chú:** Bổ sung ví dụ thực tế / lưu ý riêng của bạn ở đây (optional).
 
@@ -254,7 +254,6 @@ df.drop('Fuel', axis=1, inplace=True)
 ```
 
 ## 5. Exploratory Data Analysis (EDA)
-### 5.1. Statistics technique
 # 📊 Exploratory Data Analysis (EDA) trong Python
 
 Tài liệu tổng hợp các kỹ thuật **EDA** cơ bản nhằm trả lời câu hỏi trọng tâm:
@@ -265,32 +264,35 @@ Tài liệu tổng hợp các kỹ thuật **EDA** cơ bản nhằm trả lời 
 
 ## 📑 Mục lục
 
-- [1. Descriptive Statistics (Thống kê mô tả)](#1-descriptive-statistics-thống-kê-mô-tả)
-- [2. Group By & Heatmap](#2-group-by--heatmap)
-- [3. ANOVA (Analysis of Variance)](#3-anova-analysis-of-variance)
-- [4. Correlation Statistics — Pearson Correlation](#4-correlation-statistics--pearson-correlation)
-- [5. Chi-Square Test (χ²)](#5-chi-square-test-χ²)
-- [6. Tổng kết: Chọn phương pháp theo loại biến](#6-tổng-kết-chọn-phương-pháp-theo-loại-biến)
+- [5. Exploratory Data Analysis (EDA)](#5-exploratory-data-analysis-eda)
+  - [5.1. Descriptive Statistics (Thống kê mô tả)](#51-descriptive-statistics-thống-kê-mô-tả)
+  - [5.2. Group By & Heatmap](#52-group-by--heatmap)
+  - [5.3. ANOVA (Analysis of Variance)](#53-anova-analysis-of-variance)
+  - [5.4. Correlation Statistics — Pearson Correlation](#54-correlation-statistics--pearson-correlation)
+  - [5.5. Chi-Square Test (χ²)](#55-chi-square-test-χ²)
+  - [5.6. Tổng kết: Chọn phương pháp theo loại biến](#56-tổng-kết-chọn-phương-pháp-theo-loại-biến)
 
 > 💡 **Ghi chú:** Toàn bộ ví dụ dùng `pandas`, `seaborn`, `matplotlib`, `scipy.stats`.
 
 ---
 
-## 1. Descriptive Statistics (Thống kê mô tả)
+## 5. Exploratory Data Analysis (EDA)
 
-### 1.1. Thống kê biến số (Numerical)
+### 5.1. Descriptive Statistics (Thống kê mô tả)
+
+**Thống kê biến số (Numerical):**
 
 ```python
 df.describe()
 ```
 
-### 1.2. Thống kê biến phân loại (Categorical)
+**Thống kê biến phân loại (Categorical):**
 
 ```python
 df['drive-wheels'].value_counts()
 ```
 
-### 1.3. Box Plot — so sánh phân phối giữa các nhóm
+**Box Plot — so sánh phân phối giữa các nhóm**
 
 Phù hợp khi so sánh một **biến numeric** theo từng nhóm của một **biến categorical**.
 
@@ -302,7 +304,7 @@ sns.boxplot(x="drive-wheels", y="price", data=df)
 
 > 🔑 **Điểm chính:** Box plot cho thấy median, IQR (khoảng tứ phân vị), và outlier của từng nhóm → dễ nhận diện nhóm nào có giá trị cao/thấp bất thường.
 
-### 1.4. Scatter Plot — quan hệ giữa hai biến liên tục (continuous)
+**Scatter Plot — quan hệ giữa hai biến liên tục (continuous)**
 
 - Mỗi điểm dữ liệu (observation) là một điểm trên đồ thị.
 - Hai biến được thể hiện:
@@ -321,13 +323,13 @@ plt.show()
 
 ---
 
-## 2. Group By & Heatmap
+### 5.2. Group By & Heatmap
 
-### 2.1. Câu hỏi ví dụ
+**Câu hỏi ví dụ**
 
 > ❓ "Có mối quan hệ nào giữa các loại **drive system** (hệ dẫn động) và **giá xe** không? Nếu có, loại nào làm tăng giá trị xe nhiều nhất?"
 
-### 2.2. `groupby()` — gom nhóm dữ liệu
+**`groupby()` — gom nhóm dữ liệu**
 
 ```python
 df_group = df[['drive-wheels', 'body-style', 'price']].groupby(
@@ -335,14 +337,14 @@ df_group = df[['drive-wheels', 'body-style', 'price']].groupby(
 ).mean()
 ```
 
-### 2.3. `pivot()` — chuyển bảng dài sang bảng ma trận
+**`pivot()` — chuyển bảng dài sang bảng ma trận**
 
 ```python
 df_pivot = df_group.pivot(index='drive-wheels', columns='body-style')
 # Lưu ý: index là hàng (row), columns là cột
 ```
 
-### 2.4. Heatmap — trực quan hóa biến mục tiêu theo nhiều biến
+**Heatmap — trực quan hóa biến mục tiêu theo nhiều biến**
 
 ```python
 plt.pcolor(df_pivot, cmap="RdBu")  # Màu đỏ = giá trị thấp, màu xanh = giá trị cao
@@ -354,7 +356,7 @@ plt.show()
 
 ---
 
-## 3. ANOVA (Analysis of Variance)
+### 5.3. ANOVA (Analysis of Variance)
 
 **Mục đích:** Kiểm định xem có sự khác biệt **có ý nghĩa thống kê** về giá trị trung bình (mean) của biến numeric **giữa từ 3 nhóm categorical trở lên** hay không.
 
@@ -373,13 +375,13 @@ f_val, p_val = stats.f_oneway(
 | Chỉ số | Ý nghĩa |
 |---|---|
 | **F-statistic (F-value)** | Tỷ lệ phương sai *giữa các nhóm* so với phương sai *trong từng nhóm*. F càng lớn → sự khác biệt giữa các nhóm càng rõ rệt |
-| **p-value** | Xác suất để kết quả quan sát được là do ngẫu nhiên (xem cách đọc ở mục 4) |
+| **p-value** | Xác suất để kết quả quan sát được là do ngẫu nhiên (xem cách đọc ở mục 5.4) |
 
 > 🔑 **Điểm chính:** ANOVA phù hợp khi biến độc lập là **categorical (≥ 3 nhóm)** và biến phụ thuộc là **numeric**.
 
 ---
 
-## 4. Correlation Statistics — Pearson Correlation
+### 5.4. Correlation Statistics — Pearson Correlation
 
 **Mục đích:** Đo **độ mạnh và chiều hướng** của mối quan hệ **tuyến tính** giữa hai biến liên tục (continuous).
 
@@ -389,7 +391,7 @@ from scipy import stats
 pearson_coef, p_value = stats.pearsonr(df['horsepower'], df['price'])
 ```
 
-### 4.1. Correlation Coefficient (Hệ số tương quan)
+**Correlation Coefficient (Hệ số tương quan)**
 
 | Giá trị | Ý nghĩa |
 |---|---|
@@ -397,7 +399,7 @@ pearson_coef, p_value = stats.pearsonr(df['horsepower'], df['price'])
 | Tiến gần **+1** | Mối quan hệ **đồng biến** (dương) càng mạnh |
 | Tiến gần **-1** | Mối quan hệ **nghịch biến** (âm) càng mạnh |
 
-### 4.2. p-value — độ tin cậy của kết quả
+**p-value — độ tin cậy của kết quả**
 
 | p-value | Mức độ tin cậy |
 |---|---|
@@ -408,7 +410,7 @@ pearson_coef, p_value = stats.pearsonr(df['horsepower'], df['price'])
 
 > 🔑 **Điểm chính:** Cần đọc **cả 2 chỉ số cùng lúc** — hệ số tương quan cho biết *độ mạnh/chiều* của quan hệ, còn p-value cho biết *kết quả đó có đáng tin không*. Hệ số cao nhưng p-value lớn (> 0.1) thì kết quả không có ý nghĩa thống kê.
 
-### 4.3. Correlation Heatmap (trực quan hóa nhiều biến cùng lúc)
+**Correlation Heatmap (trực quan hóa nhiều biến cùng lúc)**
 
 ```python
 import seaborn as sns
@@ -421,7 +423,7 @@ sns.heatmap(corr_matrix, annot=True, cmap="RdBu", center=0)
 
 ---
 
-## 5. Chi-Square Test (χ²)
+### 5.5. Chi-Square Test (χ²)
 
 **Mục đích:** Kiểm định mối quan hệ giữa **hai biến categorical** — trả lời câu hỏi "hai biến này có độc lập với nhau hay không?"
 
@@ -444,14 +446,14 @@ print(f"Degrees of freedom: {dof}")
 | Chỉ số | Ý nghĩa |
 |---|---|
 | **Chi-square statistic (χ²)** | Càng lớn → sự khác biệt giữa observed và expected càng lớn → hai biến càng có khả năng liên quan |
-| **p-value** | `< 0.05` → bác bỏ giả thuyết "hai biến độc lập" → **có mối quan hệ** giữa 2 biến categorical (đọc theo bảng ở mục 4.2) |
+| **p-value** | `< 0.05` → bác bỏ giả thuyết "hai biến độc lập" → **có mối quan hệ** giữa 2 biến categorical (đọc theo bảng ở mục 5.4) |
 | **Degrees of freedom (dof)** | `(số hàng - 1) × (số cột - 1)` trong contingency table |
 
 > 🔑 **Điểm chính:** Pearson dùng cho **numeric vs numeric**, ANOVA dùng cho **categorical vs numeric**, còn **Chi-square dùng cho categorical vs categorical**.
 
 ---
 
-## 6. Tổng kết: Chọn phương pháp theo loại biến
+### 5.6. Tổng kết: Chọn phương pháp theo loại biến
 
 | Biến 1 | Biến 2 | Phương pháp phù hợp |
 |---|---|---|
