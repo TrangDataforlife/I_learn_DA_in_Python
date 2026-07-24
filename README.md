@@ -286,4 +286,61 @@ plt.pcolor(C , cmap = (optional))
 ```python
 import seaborn as sns
 ```
+### Các biểu đồ trong pyplot: Regression plot, Box and whisker plot, Residual Plot, KDE plot, Distribution Plot.
 
+```python
+sns.boxplot(x= df[''], y= df[''])
+sns.kdeplot(X)
+sns.distplot(X,hist=False)
+sns.regplot(x= df[''], y= df[''])
+sns.residplot(x= df[''], y= df[''])
+```
+### c. Kernel Density Estimate (KDE) plot & Box plot
+
+#### 1. `sns.kdeplot(X)`
+
+- **Cách hoạt động:** Ước lượng và vẽ đường cong **phân phối mật độ xác suất (probability density)** của một biến liên tục, dựa trên phương pháp làm mượt (smoothing) dữ liệu thay vì chia thành các cột (bins) như histogram.
+- **Mục tiêu:** Thể hiện hình dạng phân phối của dữ liệu (lệch trái/phải, đối xứng, đa đỉnh...) một cách trực quan và mượt mà hơn histogram.
+- **Câu hỏi đặt ra:** *Dữ liệu tập trung nhiều nhất ở khoảng giá trị nào? Phân phối có đối xứng không, có bị lệch (skewed) hay có nhiều đỉnh (multimodal) không?*
+
+#### 2. `sns.distplot(X, hist=False)`
+
+- **Cách hoạt động:** Tương tự `kdeplot`, nhưng là hàm cũ hơn của seaborn — khi đặt `hist=False`, nó chỉ vẽ đường KDE mà không vẽ histogram (thực chất gọi ngầm `kdeplot`).
+- **Mục tiêu:** Xem đường cong phân phối mượt của dữ liệu mà không bị nhiễu bởi các cột histogram, dễ so sánh hình dạng phân phối giữa các biến.
+- **Câu hỏi đặt ra:** *Hình dạng phân phối tổng thể của biến trông như thế nào nếu bỏ qua chi tiết từng bin?*
+
+> ⚠️ **Lưu ý:** `distplot` đã bị **deprecated** (loại bỏ) trong các phiên bản seaborn mới, nên khuyến khích dùng `sns.kdeplot()` hoặc `sns.histplot(kde=True)` thay thế.
+
+#### 3. `sns.boxplot(x=df[''], y=df[''])`
+
+- **Cách hoạt động:** Vẽ **hộp (box) thể hiện các phân vị** của dữ liệu (Q1, trung vị Q2, Q3) cùng với "râu" (whiskers) thể hiện khoảng giá trị bình thường, và các điểm nằm ngoài được đánh dấu là **outliers**.
+- **Mục tiêu:** So sánh phân phối, độ phân tán và phát hiện giá trị ngoại lai của một biến số liên tục theo từng nhóm phân loại (categorical).
+- **Câu hỏi đặt ra:** *Phân phối của biến số có khác nhau giữa các nhóm không? Nhóm nào có độ phân tán lớn hơn? Có xuất hiện outliers không?*
+
+## So sánh Regression plot và Residual plot
+
+### 1. Regression plot (`sns.regplot`)
+
+- **Trục tung (y):** giá trị thực tế của biến phụ thuộc (VD: `price`), không phải phần dư.
+- **Đường thẳng xanh:** đường hồi quy tuyến tính (best-fit line) mô tả xu hướng dữ liệu, kèm theo dải màu nhạt xung quanh thể hiện khoảng tin cậy (confidence interval).
+- **Mục đích:** cho biết mối quan hệ **tổng thể** giữa biến độc lập và biến phụ thuộc có tuyến tính hay không, và độ mạnh/yếu của mối quan hệ đó.
+- **Ví dụ:** với `engine-size` vs `price`, các điểm dữ liệu bám khá sát quanh đường thẳng, xu hướng đi lên rõ ràng → hai biến có mối quan hệ tuyến tính dương khá mạnh.
+
+### 2. Residual plot (`sns.residplot`)
+
+- **Trục tung (y):** không phải giá trị thực tế mà là **phần dư** (residual = giá trị thực tế − giá trị dự đoán bởi mô hình).
+- **Không có đường hồi quy**, chỉ có đường tham chiếu ngang tại `y = 0`.
+- **Mục đích:** dùng để kiểm tra độ phù hợp (validity) của mô hình tuyến tính sau khi đã fit — xem sai số có phân bố ngẫu nhiên hay không.
+- **Ví dụ:** với `highway-mpg` vs `price`, các điểm residual tạo thành hình cong (không ngẫu nhiên) → cho thấy mô hình tuyến tính chưa phù hợp với dữ liệu.
+
+### 3. Bảng tóm tắt sự khác biệt
+
+| Tiêu chí | Regression plot | Residual plot |
+|---|---|---|
+| Trục y | Giá trị thực tế (VD: `price`) | Phần dư (residual) |
+| Đường tham chiếu | Đường hồi quy + khoảng tin cậy (CI) | Đường ngang tại `y = 0` |
+| Mục đích | Xem xu hướng / mối quan hệ giữa 2 biến | Kiểm tra mô hình có phù hợp hay không |
+| Dấu hiệu tốt | Điểm bám sát đường thẳng → tương quan tuyến tính mạnh | Điểm phân tán ngẫu nhiên quanh 0 → mô hình phù hợp |
+| Dấu hiệu xấu | Điểm phân tán rời rạc, không theo xu hướng | Điểm tạo hình dạng (cong, phễu...) → mô hình chưa phù hợp |
+
+> **Ghi nhớ:** Regression plot dùng để khám phá mối quan hệ ban đầu (EDA), còn Residual plot dùng để đánh giá/chẩn đoán mô hình sau khi đã fit — hai loại biểu đồ này thường đi kèm nhau khi phân tích hồi quy tuyến tính.
