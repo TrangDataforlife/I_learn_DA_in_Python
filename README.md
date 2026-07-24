@@ -26,7 +26,12 @@ Tài liệu tổng hợp và hệ thống hóa kiến thức xử lý dữ liệ
   - [4.4. Gom nhóm dữ liệu số (Data Binning)](#44-gom-nhóm-dữ-liệu-số-data-binning)
   - [4.5. Mã hóa biến phân loại (Categorical to Numeric)](#45-mã-hóa-biến-phân-loại-categorical-to-numeric)
 - [5. Exploratory Data Analysis (EDA)](#5-Exploratory-Data-Analysis-eda)
-
+  - [5.1. Descriptive Statistics (Thống kê mô tả)]
+  - [5.2. Group By & Heatmap]
+  - [5.3. ANOVA (Analysis of Variance)]
+  - [5.4. Correlation Statistics — Pearson Correlation]
+  - [5.5. Chi-Square Test (χ²)]
+  - [5.6. Tổng kết: Chọn phương pháp theo loại biến]
 
 > 📝 **Ghi chú:** Bổ sung ví dụ thực tế / lưu ý riêng của bạn ở đây (optional).
 
@@ -457,6 +462,7 @@ print(f"Degrees of freedom: {dof}")
 | Nhiều biến Categorical | Numeric (target) | `groupby()` + `pivot()` + **Heatmap** |
 
 > ✅ **Ghi nhớ nhanh:** EDA không chỉ để "xem dữ liệu trông như thế nào", mà là bước **kiểm định giả thuyết ban đầu** về mối quan hệ giữa các biến — làm nền tảng cho việc chọn đặc trưng (feature selection) trước khi xây dựng mô hình.
+
 ### 5.2. matplotlib & seaborn
 ### a. matplotlib
 
