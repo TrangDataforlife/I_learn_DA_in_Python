@@ -416,7 +416,7 @@ pearson_coef, p_value = stats.pearsonr(df['horsepower'], df['price'])
 import seaborn as sns
 
 corr_matrix = df.corr(numeric_only=True)
-sns.heatmap(corr_matrix, annot=True, cmap="RdBu", center=0)
+sns.heatmap(corr_matrix, annot=False, cmap="RdBu", center=0)
 ```
 
 > 🔑 **Điểm chính:** Dùng để quét nhanh toàn bộ biến numeric, tìm ra các cặp biến có tương quan mạnh với biến target (price) — bước quan trọng để chọn đặc trưng (feature selection) trước khi mô hình hóa.
