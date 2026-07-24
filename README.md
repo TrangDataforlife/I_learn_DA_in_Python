@@ -291,7 +291,6 @@ import seaborn as sns
 ```python
 sns.boxplot(x= df[''], y= df[''])
 sns.kdeplot(X)
-sns.distplot(X,hist=False)
 sns.regplot(x= df[''], y= df[''])
 sns.residplot(x= df[''], y= df[''])
 ```
@@ -303,15 +302,7 @@ sns.residplot(x= df[''], y= df[''])
 - **Mục tiêu:** Thể hiện hình dạng phân phối của dữ liệu (lệch trái/phải, đối xứng, đa đỉnh...) một cách trực quan và mượt mà hơn histogram.
 - **Câu hỏi đặt ra:** *Dữ liệu tập trung nhiều nhất ở khoảng giá trị nào? Phân phối có đối xứng không, có bị lệch (skewed) hay có nhiều đỉnh (multimodal) không?*
 
-#### 2. `sns.distplot(X, hist=False)`
-
-- **Cách hoạt động:** Tương tự `kdeplot`, nhưng là hàm cũ hơn của seaborn — khi đặt `hist=False`, nó chỉ vẽ đường KDE mà không vẽ histogram (thực chất gọi ngầm `kdeplot`).
-- **Mục tiêu:** Xem đường cong phân phối mượt của dữ liệu mà không bị nhiễu bởi các cột histogram, dễ so sánh hình dạng phân phối giữa các biến.
-- **Câu hỏi đặt ra:** *Hình dạng phân phối tổng thể của biến trông như thế nào nếu bỏ qua chi tiết từng bin?*
-
-> ⚠️ **Lưu ý:** `distplot` đã bị **deprecated** (loại bỏ) trong các phiên bản seaborn mới, nên khuyến khích dùng `sns.kdeplot()` hoặc `sns.histplot(kde=True)` thay thế.
-
-#### 3. `sns.boxplot(x=df[''], y=df[''])`
+#### 2. `sns.boxplot(x=df[''], y=df[''])`
 
 - **Cách hoạt động:** Vẽ **hộp (box) thể hiện các phân vị** của dữ liệu (Q1, trung vị Q2, Q3) cùng với "râu" (whiskers) thể hiện khoảng giá trị bình thường, và các điểm nằm ngoài được đánh dấu là **outliers**.
 - **Mục tiêu:** So sánh phân phối, độ phân tán và phát hiện giá trị ngoại lai của một biến số liên tục theo từng nhóm phân loại (categorical).
