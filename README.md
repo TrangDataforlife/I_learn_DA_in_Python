@@ -580,6 +580,7 @@ Tài liệu tổng hợp quy trình xây dựng mô hình dự đoán, nhằm tr
   - [3.4. Pipeline — Gộp các bước thành 1 quy trình](#34-pipeline--gộp-các-bước-thành-1-quy-trình)
 - [4. R-squared và MSE — Đánh giá mô hình trên tập huấn luyện](#4-r-squared-và-mse--đánh-giá-mô-hình-trên-tập-huấn-luyện)
 - [5. Prediction và Decision Making](#5-prediction-và-decision-making)
+- [6. Model Evaluation and Refinement](#6-model-evaluation-and-refinement)
 
 ---
 
@@ -858,6 +859,131 @@ yhat = pipe.predict(X[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg'
 
 > 📝 *Mục này sẽ trình bày cách đánh giá mô hình bằng con số cụ thể — R-squared (hệ số xác định) và MSE (sai số bình phương trung bình) — thay vì chỉ đánh giá bằng mắt như ở mục 2. Nội dung sẽ được bổ sung.*
 
-## 5. Prediction và Decision Making
+### 4.1. R-squared (R²) — Hệ số xác định
 
-> 📝 *Mục này sẽ trình bày cách dùng mô hình đã huấn luyện để dự đoán giá xe thực tế và ra quyết định (VD: so sánh nhiều mô hình để chọn mô hình phù hợp nhất). Nội dung sẽ được bổ sung.*
+**Hiểu đơn giản:** R² trả lời câu hỏi — *"Mô hình của mình giải thích được bao nhiêu phần trăm sự biến thiên của giá xe?"*
+
+| Giá trị R² | Ý nghĩa |
+|---|---|
+| **1** (hoặc gần 1, VD: 0.9) | Mô hình giải thích gần như hoàn hảo sự biến thiên của dữ liệu → khớp rất tốt |
+| **0** | Mô hình không giải thích được gì cả — dự đoán ngang bằng việc lấy giá trị trung bình |
+| **Âm (< 0)** | Mô hình còn tệ hơn cả việc chỉ đoán bừa bằng giá trị trung bình |
+
+**Ví dụ minh họa:** Nếu R² = 0.80 → có nghĩa là mô hình giải thích được **80%** sự biến thiên của giá xe dựa trên các biến predictor đã dùng; 20% còn lại là do các yếu tố khác chưa được đưa vào mô hình (hoặc do nhiễu ngẫu nhiên).
+
+**Code trong Python:**
+
+```python
+# Cách 1: dùng phương thức .score() có sẵn của mô hình
+lm.fit(X, Y)
+r_squared = lm.score(X, Y)
+print(f"R-squared: {r_squared}")
+
+# Cách 2: dùng sklearn.metrics
+from sklearn.metrics import r2_score
+
+yhat = lm.predict(X)
+r_squared = r2_score(Y, yhat)
+```
+
+### 4.2. MSE — Sai số bình phương trung bình
+
+**Hiểu đơn giản:** MSE đo *"trung bình mình dự đoán sai bao nhiêu"* — tính khoảng cách giữa giá trị thực tế và giá trị dự đoán, bình phương lên (để loại dấu âm/dương và phạt nặng sai số lớn), rồi lấy trung bình.
+
+**Công thức:** MSE = (1/n) × Σ (y_thực_tế − ŷ_dự_đoán)²
+| Đặc điểm | Ý nghĩa |
+|---|---|
+| MSE càng **nhỏ** | Mô hình dự đoán càng **sát** với giá trị thực tế |
+| MSE = 0 | Mô hình dự đoán đúng tuyệt đối 100% (thực tế gần như không xảy ra) |
+| Đơn vị của MSE | Là **bình phương** đơn vị của `y` (VD: nếu `y` là USD thì MSE có đơn vị USD²) → khó diễn giải trực quan bằng R², thường dùng để **so sánh giữa các mô hình** hơn là đọc một mình |
+
+**Code trong Python:**
+
+```python
+from sklearn.metrics import mean_squared_error
+
+yhat = lm.predict(X)
+mse = mean_squared_error(df['price'], yhat)
+print(f"MSE: {mse}")
+```
+
+---
+
+## 5. Prediction và Decision Making
+> ❓ **Câu hỏi trọng tâm: "Làm sao biết mô hình của mình là đúng (correct)?"**
+
+### 5.1. Kiểm tra dự đoán có hợp lý không (Sanity Check)
+
+Trước khi tin vào các con số R²/MSE, bước đầu tiên đơn giản nhất là: **thử dự đoán vài giá trị mới và xem kết quả có "hợp lý" theo trực giác không** (VD: xe tiêu hao nhiên liệu nhiều hơn thì giá có xu hướng thấp hơn không?).
+
+```python
+import numpy as np
+
+# Bước 1: Huấn luyện mô hình (SLR ví dụ với 1 biến highway-mpg)
+lm.fit(df[['highway-mpg']], df['price'])
+
+# Bước 2: Tạo dữ liệu đầu vào mới để thử dự đoán
+# np.arange(start, stop, step): sinh dãy số từ 1 đến 100 (bước nhảy 1)
+# .reshape(-1, 1): chuyển từ mảng 1 chiều -> mảng 2 chiều (bắt buộc với sklearn,
+#                  vì sklearn luôn yêu cầu đầu vào X có dạng [số dòng, số cột])
+new_input = np.arange(1, 101, 1).reshape(-1, 1)
+
+# Bước 3: Dự đoán trên dữ liệu mới
+yhat = lm.predict(new_input)
+# yhat trả về 1 mảng (array) 100 giá trị dự đoán tương ứng
+```
+
+> ⚠️ Lưu ý chính tả hàm: là `np.arange` (không có chữ **r** thứ 2 — không phải `np.arrange`), gõ nhầm sẽ báo lỗi `AttributeError`.
+
+### 5.2. 5 cách đánh giá mô hình có đáng tin không
+
+Sau bước sanity check ở trên, có 5 công cụ chính để đánh giá mô hình kỹ hơn:
+
+**1. `sns.regplot()` — kiểm tra xu hướng (trend)**
+
+Vẽ scatter plot kèm đường hồi quy để xem mô hình có bắt đúng xu hướng chung của dữ liệu không.
+
+```python
+import seaborn as sns
+
+sns.regplot(x='highway-mpg', y='price', data=df)
+```
+
+**2. Residual Plot — kiểm tra phần dư có ngẫu nhiên không**
+
+"Phần dư" (residual) = giá trị thực tế − giá trị dự đoán. Đây là công cụ **quan trọng nhất** để biết Linear Regression có phù hợp hay không.
+
+```python
+sns.residplot(x=df['highway-mpg'], y=df['price'])
+```
+
+| Hình dạng residual plot | Kết luận |
+|---|---|
+| Các điểm phân bố **ngẫu nhiên**, không theo hình dạng nào, dao động đều quanh đường số 0 | Mô hình **tuyến tính (linear)** là phù hợp |
+| Các điểm tạo thành **hình cong** (VD: parabol) rõ rệt | Quan hệ thực tế là **phi tuyến (non-linear)** → nên dùng Polynomial Regression (mục 3) thay vì Linear Regression |
+
+**3. Distribution Plot (trực quan hóa)** — như đã trình bày ở [mục 2](#2-model-evaluation-bằng-trực-quan-hóa-distribution-plot): so sánh phân phối giá trị thực tế vs. giá trị dự đoán.
+
+**4. Numerical Measures (R², MSE)** — như đã trình bày ở [mục 4](#4-r-squared-và-mse--đánh-giá-mô-hình-bằng-con-số): đánh giá bằng con số cụ thể.
+
+**5. So sánh nhiều mô hình** — xem chi tiết ngay bên dưới.
+
+### 5.3. So sánh nhiều mô hình — cẩn thận với MSE nhỏ
+
+> ⚠️ **Cạm bẫy thường gặp:** *MSE nhỏ hơn KHÔNG có nghĩa là mô hình đó luôn luôn tốt hơn!*
+
+**Vì sao?** Vì về mặt toán học, khi bạn **thêm biến** hoặc **tăng độ phức tạp** của mô hình, MSE trên tập huấn luyện gần như **luôn luôn giảm** — kể cả khi các biến thêm vào không thực sự có ý nghĩa:
+MSE(MLR) < MSE(SLR) (luôn đúng — MLR có nhiều biến hơn)
+MSE(Polynomial) < MSE(Linear Regression) (luôn đúng — Polynomial phức tạp hơn)
+
+**Ví dụ minh họa:** Giả sử bạn có mô hình SLR (1 biến) với MSE = 20 triệu, và mô hình MLR (10 biến, trong đó có vài biến gần như "rác", không thực sự liên quan đến giá xe) với MSE = 15 triệu. MSE của MLR thấp hơn — nhưng điều đó **không chứng minh** MLR là lựa chọn tốt hơn, vì mô hình phức tạp hơn luôn "khớp" tốt hơn với chính dữ liệu nó được huấn luyện trên đó (dù không thực sự học được quy luật hữu ích) — đây gọi là hiện tượng **overfitting (quá khớp)**.
+
+> 🔑 **Điểm chính:** Khi so sánh mô hình, đừng chỉ nhìn MSE trên tập huấn luyện (in-sample). Cần kết hợp thêm: R² (mục 4.1), residual plot (mục 5.2), và quan trọng nhất — đánh giá mô hình trên **tập dữ liệu mới chưa từng thấy (test set)** chứ không chỉ tập đã dùng để huấn luyện. Đây chính là nội dung sẽ được đào sâu ở mục 6.
+
+---
+
+## 6. Model Evaluation and Refinement (Advanced)
+
+> 📝 *Mục này sẽ trình bày các kỹ thuật đánh giá mô hình nâng cao hơn — ví dụ: train/test split, cross-validation, và cách phát hiện/khắc phục overfitting — nhằm giải quyết đúng vấn đề đã nêu ở mục 5.3 (so sánh mô hình chỉ bằng MSE trên tập train là chưa đủ tin cậy).*
+
+
