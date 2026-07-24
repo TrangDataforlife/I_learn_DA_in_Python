@@ -643,6 +643,7 @@ yhat = lm.predict(X)
 # Trích nhiều cột predictor cùng lúc, lưu vào biến "a"
 a = df[['horsepower', 'curb-weight', 'engine-size', 'highway-mpg']]
 
+lm = LinearRegression()
 # Huấn luyện mô hình với nhiều biến predictor
 lm.fit(a, df['price'])
 
@@ -742,6 +743,7 @@ f = np.polyfit(x, y, 3)
 p = np.poly1d(f)
 
 print(p)
+p(x)
 ```
 
 > ⚠️ Lưu ý chính tả hàm: là `np.poly1d` (số **1** + chữ **d**), không phải `np.polyld` (chữ L) — gõ nhầm sẽ báo lỗi.
@@ -768,10 +770,11 @@ pr = PolynomialFeatures(degree=2, include_bias=False)
 # fit_transform: sinh ra ma trận đặc trưng đa thức từ 2 cột gốc
 x_polly = pr.fit_transform(df[['horsepower', 'curb-weight']])
 
+lm = LinearRegression()
 # Sau đó đưa x_polly vào LinearRegression() như bình thường để huấn luyện
 lm.fit(x_polly, df['price'])
 ```
-
+> Lưu ý: 	Tạo ra các cột có phương sai chênh lệch cực lớn (x1² sẽ lớn hơn x1 rất nhiều) → nếu không scale, mô hình dễ bị lệch trọng số
 ---
 
 ### 3.3. Pre-processing — Chuẩn hóa dữ liệu (StandardScaler)
@@ -791,12 +794,22 @@ SCALE.fit(x_data[['horsepower', 'highway-mpg']])
 # transform(): áp dụng công thức chuẩn hóa đã học ở bước fit()
 # để biến đổi dữ liệu gốc thành dữ liệu đã scale
 x_scale = SCALE.transform(x_data[['horsepower', 'highway-mpg']])
+
+# fit(): huấn luyện mô hình hồi quy tuyến tính trên dữ liệu đã scale (x_scale)
+# và biến mục tiêu y_data (ví dụ: giá xe)
+lm.fit(x_scale, y_data)
+
+# predict(): dùng mô hình đã huấn luyện để dự đoán ŷ từ x_scale
+y_hat = lm.predict(x_scale)
+
+print(y_hat[0:5])   # xem thử 5 giá trị dự đoán đầu tiên
 ```
 
 > 🔑 **Điểm chính:** Khác với cách chuẩn hóa thủ công bằng pandas (`(df['income'] - df['income'].mean()) / df['income'].std()`), `StandardScaler` của sklearn có 2 ưu điểm:
 > 1. **Tách riêng `fit` và `transform`** — cho phép học tham số (mean, std) từ tập **train**, rồi dùng đúng tham số đó để scale tập **test**, tránh **data leakage** (rò rỉ thông tin từ tập test vào lúc huấn luyện).
 > 2. **Xử lý nhiều cột cùng lúc**, tiện lợi khi chuẩn bị dữ liệu đầu vào cho `Pipeline` hoặc Polynomial Regression nhiều biến.
 
+> Lưu ý: Nếu tự làm tay bằng pandas, dễ bị data leakage (tính mean/std luôn trên cả tập test)
 ---
 
 ### 3.4. Pipeline — Gộp các bước thành 1 quy trình
