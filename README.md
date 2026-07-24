@@ -351,7 +351,7 @@ df_pivot = df_group.pivot(index='drive-wheels', columns='body-style')
 **Heatmap — trực quan hóa biến mục tiêu theo nhiều biến**
 
 ```python
-plt.heatmap(df_pivot, cmap="RdBu")
+sns.heatmap(df_pivot, cmap="RdBu")
 -------------------------------------
 plt.pcolor(df_pivot, cmap="RdBu")  # Màu đỏ = giá trị thấp, màu xanh = giá trị cao
 plt.colorbar()
