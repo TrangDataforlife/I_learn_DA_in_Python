@@ -26,7 +26,7 @@ Tài liệu tổng hợp và hệ thống hóa kiến thức xử lý dữ liệ
   - [4.4. Gom nhóm dữ liệu số (Data Binning)](#44-gom-nhóm-dữ-liệu-số-data-binning)
   - [4.5. Mã hóa biến phân loại (Categorical to Numeric)](#45-mã-hóa-biến-phân-loại-categorical-to-numeric)
 - [5. Exploratory Data Analysis (EDA)](#5-exploratory-data-analysis-eda)
-- [Steps:](steps:)
+- [Steps](steps)
   - [5.1. Descriptive Statistics (Thống kê mô tả)](#51-descriptive-statistics-thống-kê-mô-tả)
   - [5.2. Group By & Heatmap](#52-group-by--heatmap)
   - [5.3. ANOVA (Analysis of Variance)](#53-anova-analysis-of-variance)
@@ -278,7 +278,7 @@ Tài liệu tổng hợp các kỹ thuật **EDA** cơ bản nhằm trả lời 
 ---
 
 ## 5. Exploratory Data Analysis (EDA)
-## Steps:
+## Steps
 - Exploring "Data types"
 - Analyzing Individual Feature Patterns Using Visualization in Continuous numerical variables & Category variables
 
