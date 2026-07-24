@@ -568,7 +568,7 @@ Tài liệu tổng hợp quy trình xây dựng mô hình dự đoán, nhằm tr
 
 ---
 
-##6. Model development
+## 6. Model development
 - [1. Simple & Multiple Linear Regression](#1-simple--multiple-linear-regression)
   - [1.1. Simple Linear Regression (SLR)](#11-simple-linear-regression-slr)
   - [1.2. Multiple Linear Regression (MLR)](#12-multiple-linear-regression-mlr)
