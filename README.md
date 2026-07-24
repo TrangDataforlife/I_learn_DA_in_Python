@@ -32,7 +32,7 @@ Tài liệu tổng hợp và hệ thống hóa kiến thức xử lý dữ liệ
   - [5.4. Correlation Statistics — Pearson Correlation](#54-correlation-statistics--pearson-correlation)
   - [5.5. Chi-Square Test (χ²)](#55-chi-square-test-χ²)
   - [5.6. Tổng kết: Chọn phương pháp theo loại biến](#56-tổng-kết-chọn-phương-pháp-theo-loại-biến)
-
+  - [5.7. matplotlib & seaborn](#57-matplotlib--seaborn)
 > 📝 **Ghi chú:** Bổ sung ví dụ thực tế / lưu ý riêng của bạn ở đây (optional).
 
 ---
@@ -465,7 +465,7 @@ print(f"Degrees of freedom: {dof}")
 
 > ✅ **Ghi nhớ nhanh:** EDA không chỉ để "xem dữ liệu trông như thế nào", mà là bước **kiểm định giả thuyết ban đầu** về mối quan hệ giữa các biến — làm nền tảng cho việc chọn đặc trưng (feature selection) trước khi xây dựng mô hình.
 
-### 5.2. matplotlib & seaborn
+### 5.7. matplotlib & seaborn
 ### a. matplotlib
 
 ```python
