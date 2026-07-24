@@ -269,6 +269,15 @@ Các hàm trong `matplotlib` trả về một đối tượng plot (biểu đồ
 ```python
 %matplotlib inline
 ```
+### Các biểu đồ trong pyplot: line chart, scatter, histogram, bar, heatmap
+
+```python
+plt.plot(x,y)
+plt.scatter(x,y)
+plt.hist(x,bins)
+plt.bar(x,height)
+plt.pcolor(C , cmap = (optional))
+```
 
 ### b. seaborn
 
