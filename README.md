@@ -249,6 +249,214 @@ df.drop('Fuel', axis=1, inplace=True)
 ```
 
 ## 5. Exploratory Data Analysis (EDA)
+### 5.1. Statistics technique
+# 📊 Exploratory Data Analysis (EDA) trong Python
+
+Tài liệu tổng hợp các kỹ thuật **EDA** cơ bản nhằm trả lời câu hỏi trọng tâm:
+
+> ❓ **"Những đặc điểm (features) nào có ảnh hưởng lớn nhất đến giá xe (car price)?"**
+
+---
+
+## 📑 Mục lục
+
+- [1. Descriptive Statistics (Thống kê mô tả)](#1-descriptive-statistics-thống-kê-mô-tả)
+- [2. Group By & Heatmap](#2-group-by--heatmap)
+- [3. ANOVA (Analysis of Variance)](#3-anova-analysis-of-variance)
+- [4. Correlation Statistics — Pearson Correlation](#4-correlation-statistics--pearson-correlation)
+- [5. Chi-Square Test (χ²)](#5-chi-square-test-χ²)
+- [6. Tổng kết: Chọn phương pháp theo loại biến](#6-tổng-kết-chọn-phương-pháp-theo-loại-biến)
+
+> 💡 **Ghi chú:** Toàn bộ ví dụ dùng `pandas`, `seaborn`, `matplotlib`, `scipy.stats`.
+
+---
+
+## 1. Descriptive Statistics (Thống kê mô tả)
+
+### 1.1. Thống kê biến số (Numerical)
+
+```python
+df.describe()
+```
+
+### 1.2. Thống kê biến phân loại (Categorical)
+
+```python
+df['drive-wheels'].value_counts()
+```
+
+### 1.3. Box Plot — so sánh phân phối giữa các nhóm
+
+Phù hợp khi so sánh một **biến numeric** theo từng nhóm của một **biến categorical**.
+
+```python
+import seaborn as sns
+
+sns.boxplot(x="drive-wheels", y="price", data=df)
+```
+
+> 🔑 **Điểm chính:** Box plot cho thấy median, IQR (khoảng tứ phân vị), và outlier của từng nhóm → dễ nhận diện nhóm nào có giá trị cao/thấp bất thường.
+
+### 1.4. Scatter Plot — quan hệ giữa hai biến liên tục (continuous)
+
+- Mỗi điểm dữ liệu (observation) là một điểm trên đồ thị.
+- Hai biến được thể hiện:
+  - **Predictor / Independent variable** → trục **x**
+  - **Target / Dependent variable** → trục **y**
+
+```python
+import matplotlib.pyplot as plt
+
+plt.scatter(x=df["engine-size"], y=df["price"])
+plt.title("Engine Size vs Price")
+plt.xlabel("Engine Size")
+plt.ylabel("Price")
+plt.show()
+```
+
+---
+
+## 2. Group By & Heatmap
+
+### 2.1. Câu hỏi ví dụ
+
+> ❓ "Có mối quan hệ nào giữa các loại **drive system** (hệ dẫn động) và **giá xe** không? Nếu có, loại nào làm tăng giá trị xe nhiều nhất?"
+
+### 2.2. `groupby()` — gom nhóm dữ liệu
+
+```python
+df_group = df[['drive-wheels', 'body-style', 'price']].groupby(
+    ['drive-wheels', 'body-style'], as_index=False
+).mean()
+```
+
+### 2.3. `pivot()` — chuyển bảng dài sang bảng ma trận
+
+```python
+df_pivot = df_group.pivot(index='drive-wheels', columns='body-style')
+# Lưu ý: index là hàng (row), columns là cột
+```
+
+### 2.4. Heatmap — trực quan hóa biến mục tiêu theo nhiều biến
+
+```python
+plt.pcolor(df_pivot, cmap="RdBu")  # Màu đỏ = giá trị thấp, màu xanh = giá trị cao
+plt.colorbar()
+plt.show()
+```
+
+> 🔑 **Điểm chính:** Heatmap giúp nhìn nhanh biến nào (tổ hợp categorical) có ảnh hưởng mạnh nhất tới biến target (price) mà không cần đọc từng con số.
+
+---
+
+## 3. ANOVA (Analysis of Variance)
+
+**Mục đích:** Kiểm định xem có sự khác biệt **có ý nghĩa thống kê** về giá trị trung bình (mean) của biến numeric **giữa từ 3 nhóm categorical trở lên** hay không.
+
+```python
+from scipy import stats
+
+df_anova = df[['make', 'price']]
+grouped_anova = df_anova.groupby(['make'])
+
+f_val, p_val = stats.f_oneway(
+    grouped_anova.get_group('honda')['price'],
+    grouped_anova.get_group('subaru')['price']
+)
+```
+
+| Chỉ số | Ý nghĩa |
+|---|---|
+| **F-statistic (F-value)** | Tỷ lệ phương sai *giữa các nhóm* so với phương sai *trong từng nhóm*. F càng lớn → sự khác biệt giữa các nhóm càng rõ rệt |
+| **p-value** | Xác suất để kết quả quan sát được là do ngẫu nhiên (xem cách đọc ở mục 4) |
+
+> 🔑 **Điểm chính:** ANOVA phù hợp khi biến độc lập là **categorical (≥ 3 nhóm)** và biến phụ thuộc là **numeric**.
+
+---
+
+## 4. Correlation Statistics — Pearson Correlation
+
+**Mục đích:** Đo **độ mạnh và chiều hướng** của mối quan hệ **tuyến tính** giữa hai biến liên tục (continuous).
+
+```python
+from scipy import stats
+
+pearson_coef, p_value = stats.pearsonr(df['horsepower'], df['price'])
+```
+
+### 4.1. Correlation Coefficient (Hệ số tương quan)
+
+| Giá trị | Ý nghĩa |
+|---|---|
+| ≈ **0** | Không có mối quan hệ tuyến tính |
+| Tiến gần **+1** | Mối quan hệ **đồng biến** (dương) càng mạnh |
+| Tiến gần **-1** | Mối quan hệ **nghịch biến** (âm) càng mạnh |
+
+### 4.2. p-value — độ tin cậy của kết quả
+
+| p-value | Mức độ tin cậy |
+|---|---|
+| `< 0.001` | 🟢 Độ tin cậy **rất mạnh** (Strong certainty) |
+| `< 0.05` | 🟡 Độ tin cậy **trung bình** (Moderate certainty) |
+| `< 0.1` | 🟠 Độ tin cậy **yếu** (Weak certainty) |
+| `> 0.1` | 🔴 **Không** có độ tin cậy (No certainty) |
+
+> 🔑 **Điểm chính:** Cần đọc **cả 2 chỉ số cùng lúc** — hệ số tương quan cho biết *độ mạnh/chiều* của quan hệ, còn p-value cho biết *kết quả đó có đáng tin không*. Hệ số cao nhưng p-value lớn (> 0.1) thì kết quả không có ý nghĩa thống kê.
+
+### 4.3. Correlation Heatmap (trực quan hóa nhiều biến cùng lúc)
+
+```python
+import seaborn as sns
+
+corr_matrix = df.corr(numeric_only=True)
+sns.heatmap(corr_matrix, annot=True, cmap="RdBu", center=0)
+```
+
+> 🔑 **Điểm chính:** Dùng để quét nhanh toàn bộ biến numeric, tìm ra các cặp biến có tương quan mạnh với biến target (price) — bước quan trọng để chọn đặc trưng (feature selection) trước khi mô hình hóa.
+
+---
+
+## 5. Chi-Square Test (χ²)
+
+**Mục đích:** Kiểm định mối quan hệ giữa **hai biến categorical** — trả lời câu hỏi "hai biến này có độc lập với nhau hay không?"
+
+- Áp dụng khi cả 2 biến đều là **categorical** (ví dụ: `fuel-type` và `body-style`).
+- Dựa trên **bảng tần suất chéo (contingency table)** so sánh giá trị **quan sát được (observed)** với giá trị **kỳ vọng (expected)** nếu hai biến độc lập.
+
+```python
+import pandas as pd
+from scipy.stats import chi2_contingency
+
+contingency_table = pd.crosstab(df['fuel-type'], df['body-style'])
+
+chi2_stat, p_value, dof, expected = chi2_contingency(contingency_table)
+
+print(f"Chi-square statistic: {chi2_stat}")
+print(f"p-value: {p_value}")
+print(f"Degrees of freedom: {dof}")
+```
+
+| Chỉ số | Ý nghĩa |
+|---|---|
+| **Chi-square statistic (χ²)** | Càng lớn → sự khác biệt giữa observed và expected càng lớn → hai biến càng có khả năng liên quan |
+| **p-value** | `< 0.05` → bác bỏ giả thuyết "hai biến độc lập" → **có mối quan hệ** giữa 2 biến categorical (đọc theo bảng ở mục 4.2) |
+| **Degrees of freedom (dof)** | `(số hàng - 1) × (số cột - 1)` trong contingency table |
+
+> 🔑 **Điểm chính:** Pearson dùng cho **numeric vs numeric**, ANOVA dùng cho **categorical vs numeric**, còn **Chi-square dùng cho categorical vs categorical**.
+
+---
+
+## 6. Tổng kết: Chọn phương pháp theo loại biến
+
+| Biến 1 | Biến 2 | Phương pháp phù hợp |
+|---|---|---|
+| Numeric | Numeric | Scatter plot + **Pearson Correlation** |
+| Categorical | Numeric | Box plot + **ANOVA** |
+| Categorical | Categorical | Bar/Count plot + **Chi-Square Test** |
+| Nhiều biến Numeric | Numeric (target) | **Correlation Heatmap** |
+| Nhiều biến Categorical | Numeric (target) | `groupby()` + `pivot()` + **Heatmap** |
+
+> ✅ **Ghi nhớ nhanh:** EDA không chỉ để "xem dữ liệu trông như thế nào", mà là bước **kiểm định giả thuyết ban đầu** về mối quan hệ giữa các biến — làm nền tảng cho việc chọn đặc trưng (feature selection) trước khi xây dựng mô hình.
 ### 5.2. matplotlib & seaborn
 ### a. matplotlib
 
