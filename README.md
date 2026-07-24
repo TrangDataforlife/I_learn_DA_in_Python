@@ -249,3 +249,32 @@ df.drop('Fuel', axis=1, inplace=True)
 ```
 
 ## 5. Exploratory Data Analysis (EDA)
+### 5.2. matplotlib & seaborn
+### a. matplotlib
+
+```python
+from matplotlib import pyplot as plt
+```
+
+Ngoài ra, câu lệnh trên cũng có thể được viết như sau:
+
+```python
+import matplotlib.pyplot as plt
+```
+
+Lưu ý rằng hầu hết các biểu đồ mà chúng ta quan tâm trong thư viện này đều nằm trong thư mục con `pyplot` của package.
+
+Các hàm trong `matplotlib` trả về một đối tượng plot (biểu đồ), và cần thêm câu lệnh khác để hiển thị nó. Khi sử dụng `matplotlib` trong Jupyter Notebook, chúng ta cần biểu đồ được hiển thị ngay bên trong giao diện notebook. Vì vậy, việc thêm câu lệnh "magic" sau đây ngay sau khi import thư viện là điều cần thiết:
+
+```python
+%matplotlib inline
+```
+
+### b. seaborn
+
+`seaborn` thường được import trong code bằng câu lệnh sau:
+
+```python
+import seaborn as sns
+```
+
