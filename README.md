@@ -25,7 +25,7 @@ Tài liệu tổng hợp và hệ thống hóa kiến thức xử lý dữ liệ
   - [4.3. Chuẩn hóa Thang đo (Data Normalization)](#43-chuẩn-hóa-thang-đo-data-normalization)
   - [4.4. Gom nhóm dữ liệu số (Data Binning)](#44-gom-nhóm-dữ-liệu-số-data-binning)
   - [4.5. Mã hóa biến phân loại (Categorical to Numeric)](#45-mã-hóa-biến-phân-loại-categorical-to-numeric)
-- [5. Exploratory Data Analysis (EDA)](#5-Exploratory-Data-Analysis-(EDA))
+- [5. Exploratory Data Analysis (EDA)](#5-Exploratory-Data-Analysis-eda)
 
 
 > 📝 **Ghi chú:** Bổ sung ví dụ thực tế / lưu ý riêng của bạn ở đây (optional).
