@@ -774,7 +774,7 @@ lm.fit(x_polly, df['price'])
 ---
 
 ### 3.3. Pre-processing — Chuẩn hóa dữ liệu (StandardScaler)
-
+#### To prepare your data for more accurate modeling, use feature transformation techniques, particularly using the preprocessing library in scikit-learn, transform your data using polynomial features, and use the modules like StandardScaler to normalize the data.
 **Vấn đề:** `horsepower` có thể dao động 50–250, còn `highway-mpg` chỉ 15–50. Nếu để nguyên đơn vị khác nhau như vậy, mô hình có thể **hiểu nhầm** rằng feature có con số lớn hơn (`horsepower`) quan trọng hơn — dù thực tế chưa chắc vậy. `StandardScaler` giải quyết vấn đề này bằng cách đưa mọi feature về **cùng một thang đo chuẩn** (mean = 0, std = 1).
 
 ```python
