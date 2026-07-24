@@ -280,8 +280,8 @@ Tài liệu tổng hợp các kỹ thuật **EDA** cơ bản nhằm trả lời 
 ## 5. Exploratory Data Analysis (EDA)
 ## Steps
 - Exploring "Data types"
-- Analyzing Individual Feature Patterns Using Visualization in Continuous numerical variables & Category variables
-
+- Analyzing Individual Feature Patterns Using Visualization in Continuous numerical variables (regplot) & Category variables (box plot)
+- Descriptive Statistical Analysis
 ### 5.1. Descriptive Statistics (Thống kê mô tả)
 
 **Thống kê biến số (Numerical):**
@@ -293,7 +293,7 @@ df.describe()
 **Thống kê biến phân loại (Categorical):**
 
 ```python
-df['drive-wheels'].value_counts()
+df['drive-wheels'].value_counts().to_frame()
 ```
 
 **Box Plot — so sánh phân phối giữa các nhóm**
