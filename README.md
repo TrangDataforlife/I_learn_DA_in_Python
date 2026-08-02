@@ -84,7 +84,7 @@ from datetime import datetime as dt
 # Thủ công (chuyển từ string sang datetime)
 ## string
 df['InvoiceDate'] = df['InvoiceDate'].str.strip()
-df['InvoiceDate'].strftime("%d/%m/%y") => output is string
+df['InvoiceDate'].strftime("%d/%m/%y") # => output is string
 
 ## datetime
 df['Date'] = pd.to_datetime(arg, errors='raise', dayfirst=False, yearfirst=False, utc=False, format=None, exact=<no_default>, unit=None, origin='unix', cache=True) # format = "%d/%m/%Y" or "mixed"
