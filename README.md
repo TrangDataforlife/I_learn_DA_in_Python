@@ -77,13 +77,17 @@ df.to_csv('output_path.csv', index=False)
 | SQL | `pd.read_sql(query, connection)` | `df.to_sql('table_name', connection)` |
 
 ### 1.3. Working with datetime
-<a> href = "https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" </a>
+"https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior"
 ```python
 from datetime import datetime as dt
 
-# Thủ công
+# Thủ công (chuyển từ string sang datetime)
+## string
 df['InvoiceDate'] = df['InvoiceDate'].str.strip()
-df['InvoiceDate'] = pd.to_datetime(arg, errors='raise', dayfirst=False, yearfirst=False, utc=False, format=None, exact=<no_default>, unit=None, origin='unix', cache=True) # format = "%d/%m/%Y" or "mixed"
+d.strftime("%d/%m/%y")
+
+## datetime
+df['Date'] = pd.to_datetime(arg, errors='raise', dayfirst=False, yearfirst=False, utc=False, format=None, exact=<no_default>, unit=None, origin='unix', cache=True) # format = "%d/%m/%Y" or "mixed"
 
 df['month'] = df['InvoiceDate'].dt.month
 df['day'] = df['InvoiceDate'].dt.day
