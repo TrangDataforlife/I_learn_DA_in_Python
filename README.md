@@ -11,6 +11,7 @@ Tài liệu tổng hợp và hệ thống hóa kiến thức xử lý dữ liệ
 - [1. Data I/O (Đọc & Xuất Dữ Liệu)](#1-data-io-đọc--xuất-dữ-liệu)
   - [1.1. Thao tác với File CSV](#11-thao-tác-với-file-csv)
   - [1.2. Thao tác với các định dạng khác](#12-thao-tác-với-các-định-dạng-khác)
+  - [1.3. Working with datetime](#13-working-with-datetime)
 - [2. Exploratory Data Analysis (EDA)](#2-exploratory-data-analysis-eda)
   - [2.1. Kiểm tra & Chuyển đổi Kiểu dữ liệu](#21-kiểm-tra--chuyển-đổi-kiểu-dữ-liệu)
   - [2.2. Phân phối Dữ liệu & Thống kê Mô tả](#22-phân-phối-dữ-liệu--thống-kê-mô-tả)
@@ -75,6 +76,29 @@ df.to_csv('output_path.csv', index=False)
 | Excel | `pd.read_excel('file.xlsx')` | `df.to_excel('file.xlsx')` |
 | SQL | `pd.read_sql(query, connection)` | `df.to_sql('table_name', connection)` |
 
+### 1.3. Working with datetime
+<a> href = "https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" </a>
+```python
+from datetime import datetime as dt
+
+# Thủ công
+df['InvoiceDate'] = df['InvoiceDate'].str.strip()
+df['InvoiceDate'] = pd.to_datetime(arg, errors='raise', dayfirst=False, yearfirst=False, utc=False, format=None, exact=<no_default>, unit=None, origin='unix', cache=True) # format = "%d/%m/%Y" or "mixed"
+
+df['month'] = df['InvoiceDate'].dt.month
+df['day'] = df['InvoiceDate'].dt.day
+df['year'] = df['InvoiceDate'].dt.year
+df["InvoiceMonth"] = df["InvoiceDate"].dt.to_period("M").dt.to_timestamp() # lấy ngày 01 và 00:00:00 của tháng đó làm mốc chuẩn đại diện cho cả tháng
+
+# Hàm
+def get_date_int(df, column):
+    year = df[column].dt.year
+    month = df[column].dt.month
+    day = df[column].dt.day
+    return year, month, day # tuple data type
+
+
+```
 ---
 
 ## 2. Exploratory Data Analysis (EDA)
